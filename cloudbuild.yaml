@@ -1,12 +1,30 @@
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/rohith-100936904/app:$COMMIT_SHA', '.' ]
+    args: [
+      'build', '-t',
+      'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}',
+      '.'
+    ]
 
   # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'us-central1-docker.pkg.dev/$PROJECT_ID/rohith-100936904/app:$COMMIT_SHA' ]
+    args: [
+      'push',
+      'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
+    ]
 
-options:
-  logging: CLOUD_LOGGING_ONLY
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'assignment2'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'  # Remove this if authentication i
