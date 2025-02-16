@@ -1,18 +1,29 @@
-# Use an official Node.js runtime as a parent image
-FROM node:14
+# Use Node.js 18 Alpine (lightweight version)
+FROM node:18-alpine
 
-# Set the working directory inside the container
+# Set environment variable (modify as needed)
+ENV NODE_ENV=production
+
+# Create and set the working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package files first (to leverage Docker layer caching)
 COPY package.json package-lock.json ./
-RUN npm install
 
-# Copy the rest of the application code
+# Install dependencies
+RUN npm install --only=production
+
+# Copy the entire project directory
 COPY . .
 
-# Expose the application port (change if needed)
+# Change ownership permissions to "node" recursively
+RUN chown -R node:node /app
+
+# Switch to the "node" user for better security
+USER node
+
+# Expose application port (Cloud Run defaults to 8080, update if needed)
 EXPOSE 8080
 
-# Command to run the application
+# Start the application (modify if your entry point is different)
 CMD ["node", "server.js"]
