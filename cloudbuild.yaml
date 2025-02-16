@@ -15,4 +15,4 @@ steps:
     ]
 
 options:
-  logging: CLOUD_LOGGING_ONLY  # ✅ Fixes log bucket approval issue
+  logging: REGIONAL_USER_OWNED_BUCKET
