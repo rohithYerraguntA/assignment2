@@ -14,21 +14,5 @@ steps:
       'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/assignment2:$COMMIT_SHA'
     ]
 
-  # Step 3: Deploy to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - 'run'
-      - 'deploy'
-      - 'assignment2'
-      - '--image'
-      - 'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/assignment2:$COMMIT_SHA'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-      - '--port=8080'
-      - '--allow-unauthenticated'  # Remove if authentication is required
-
 options:
   logging: CLOUD_LOGGING_ONLY
