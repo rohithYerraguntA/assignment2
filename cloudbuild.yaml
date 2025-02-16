@@ -31,4 +31,4 @@ images:
   - 'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
 
 options:
-  logging: CLOUD_LOGGING_ONLY  # ✅ Fix for log bucket approval issue
+  logging: REGIONAL_USER_OWNED_BUCKET  # ✅ Fix for log bucket approval issue
