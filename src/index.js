@@ -6,9 +6,6 @@ const addItem = require('./routes/addItem');
 const updateItem = require('./routes/updateItem');
 const deleteItem = require('./routes/deleteItem');
 
-// ✅ Use PORT from environment variable for Cloud Run compatibility
-const PORT = process.env.PORT || 8080;
-
 app.use(express.json());
 app.use(express.static(__dirname + '/static'));
 
@@ -17,8 +14,10 @@ app.post('/items', addItem);
 app.put('/items/:id', updateItem);
 app.delete('/items/:id', deleteItem);
 
+// ✅ Fix: Use PORT=8080 for Google Cloud Run
+const PORT = process.env.PORT || 8080;
 db.init().then(() => {
-    app.listen(PORT, () => console.log(`✅ Server is running on port ${PORT}`)); // ✅ Fix: Now uses Cloud Run's port
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 }).catch((err) => {
     console.error(err);
     process.exit(1);
@@ -32,4 +31,4 @@ const gracefulShutdown = () => {
 
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
-process.on('SIGUSR2', gracefulShutdown);
+process.on('SIGUSR2', gracefulShutdown); // Sent by nodemon
