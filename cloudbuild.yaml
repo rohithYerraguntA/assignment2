@@ -14,6 +14,21 @@ steps:
       'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
     ]
 
-options:
-  logging: CLOUD_LOGGING_ONLY  # ✅ Fixed Logging Option
+  # Step 3: Deploy the application to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      gcloud run deploy assignment2 \
+        --image us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA} \
+        --region=us-central1 \
+        --port=8080 \
+        --platform=managed \
+        --allow-unauthenticated
 
+images:
+  - 'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
