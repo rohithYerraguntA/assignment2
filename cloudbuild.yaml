@@ -2,17 +2,33 @@ steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
-      'build', '-t', 
-      'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/app:$COMMIT_SHA', 
+      'build', '-t',
+      'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/assignment2:${COMMIT_SHA}',
       '.'
     ]
 
   # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
-      'push', 
-      'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/app:$COMMIT_SHA'
+      'push',
+      'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/assignment2:${COMMIT_SHA}'
     ]
 
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'assignment2'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/dc-lab-sem-2/rohith-100936904/assignment2:${COMMIT_SHA}'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--port=8080'  # Ensure correct port mapping for Cloud Run
+      - '--allow-unauthenticated'  # Remove if authentication is required
+
 options:
-  logging: REGIONAL_USER_OWNED_BUCKET
+  logging: CLOUD_LOGGING_ONLY  # ✅ Fixes log bucket approval issue
