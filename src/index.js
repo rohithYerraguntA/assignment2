@@ -6,6 +6,9 @@ const addItem = require('./routes/addItem');
 const updateItem = require('./routes/updateItem');
 const deleteItem = require('./routes/deleteItem');
 
+// Use the PORT environment variable for Cloud Run
+const PORT = process.env.PORT || 8080; 
+
 app.use(express.json());
 app.use(express.static(__dirname + '/static'));
 
@@ -15,7 +18,7 @@ app.put('/items/:id', updateItem);
 app.delete('/items/:id', deleteItem);
 
 db.init().then(() => {
-    app.listen(3000, () => console.log('Listening on port 3000'));
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}`)); // ✅ Fix: Now listens on Cloud Run's PORT
 }).catch((err) => {
     console.error(err);
     process.exit(1);
