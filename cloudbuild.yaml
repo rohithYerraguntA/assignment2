@@ -1,5 +1,5 @@
 steps:
-  # Step 1: Build the Docker image
+  # Step 1: Build the Docker Image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', '-t',
@@ -7,28 +7,30 @@ steps:
       '.'
     ]
 
-  # Step 2: Push the Docker image to Artifact Registry
+  # Step 2: Push the Docker Image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
       'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
     ]
 
-  # Step 3: Deploy the application to Cloud Run
+  # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'bash'
+    entrypoint: gcloud
     args:
-    - '-c'
-    - |
-      gcloud run deploy assignment2 \
-        --image us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA} \
-        --region=us-central1 \
-        --port=8080 \
-        --platform=managed \
-        --allow-unauthenticated
+    - 'run'
+    - 'deploy'
+    - 'assignment2'
+    - '--image'
+    - 'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
+    - '--region'
+    - 'us-central1'
+    - '--platform=managed'
+    - '--port=8080'
+    - '--allow-unauthenticated'
 
 images:
   - 'us-central1-docker.pkg.dev/semester-2-408906/rohith-100936904/assignment2:${COMMIT_SHA}'
 
 options:
-  logging: REGIONAL_USER_OWNED_BUCKET  # ✅ Fix for log bucket approval issue
+  logging: REGIONAL_USER_OWNED_BUCKET
